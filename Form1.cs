@@ -14,6 +14,7 @@ namespace FieldConnectMapping
 {
     public partial class Form1 : Form
     {
+        private const string Version = "0.1";
         private const string SignalHeader = "*SIGNAL*";
         private const string InternalConnectorPrefix = "JS";
 

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FieldConnectMapping", "FieldConnectMapping.csproj", "{5C11533F-641C-4BDF-8D1A-4A757986FE6F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C11533F-641C-4BDF-8D1A-4A757986FE6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C11533F-641C-4BDF-8D1A-4A757986FE6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C11533F-641C-4BDF-8D1A-4A757986FE6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C11533F-641C-4BDF-8D1A-4A757986FE6F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {45FD7B6E-5345-475B-A073-4774940AFBEB}
+	EndGlobalSection
+EndGlobal

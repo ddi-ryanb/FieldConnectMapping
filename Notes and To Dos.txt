@@ -1,0 +1,11 @@
+﻿- Check on the relationship between slot # and corner connector pin groupings (e.g. JS1A, JS2B, etc.)
+- Check for and prevent corner connector group assignments
+- Save and load slot card configuration
+- Missing connectors
+	- J30 - passthrough.
+		- Didn't make it into netlist data table
+	- JMESC1/2/3/4 - passthrough
+		- Didn't make it into netlist data table
+	- P41 - shares signals with JPCB3 (OK)
+	- P42 - shares signals with JPCB3 (OK)
+

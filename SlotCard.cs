@@ -33,7 +33,7 @@ namespace DeviceSlotCards
             AllSlotCards.Add(new SlotCard(SlotCardType.CDO_10, "CDO-10", 16, 1));
             AllSlotCards.Add(new SlotCard(SlotCardType.CDO_11, "CDO-11", 16, 1));
             AllSlotCards.Add(new SlotCard(SlotCardType.CRS_10, "CRS-10", 8, 2));
-            AllSlotCards.Add(new SlotCard(SlotCardType.CRS_13, "CRS-13", 8, 2));
+            AllSlotCards.Add(new SlotCard(SlotCardType.CRS_13, "CRS-13", 4, 2));
             //            AllSlotCards.Add(new SlotCard(SlotCardType.CRS_14, "CRS-14", 8, 2));
             AllSlotCards.Add(new SlotCard(SlotCardType.COO_10, "COO-10", 8, 2));
             AllSlotCards.Add(new SlotCard(SlotCardType.COO_11, "COO-11", 16, 1));
@@ -56,7 +56,7 @@ namespace DeviceSlotCards
             AllSlotCards.Add(new SlotCard(SlotCardType.CTP_11, "CTP_11", 16, 1));
             AllSlotCards.Add(new SlotCard(SlotCardType.CTP_11, "CTP_12", 4, 1));
             AllSlotCards.Add(new SlotCard(SlotCardType.CPM_10, "CPM_10", 16, 1));
-            AllSlotCards.Add(new SlotCard(SlotCardType.CUR_12, "CUR_12", 4, 1));
+            AllSlotCards.Add(new SlotCard(SlotCardType.CUR_12, "CUR_12", 4, 4));
         }
 
     }
@@ -106,26 +106,26 @@ namespace DeviceSlotCards
     {
         public String CardDescription;
         public String CodeName;
-        public UInt16 NumChannels;
-        public byte PinStep;
+        public byte NumChannels;
+        public byte PinsPerChannel;
         public Int16 HexCode;
-        public UInt16 IOChannelType;
+        public byte IOChannelType;
         public String[] PartNumbers;
 
-        public SlotCard(String CardDesc, String Code, UInt16 NumCh, byte Pstep)
+        public SlotCard(String CardDesc, String Code, byte NumCh, byte Pstep)
         {
             CardDescription = CardDesc;
             CodeName = Code;
             NumChannels = NumCh;
-            PinStep = Pstep;
+            PinsPerChannel = Pstep;
         }
 
-        public SlotCard(String CardDesc, String Code, UInt16 NumCh, byte Pstep, Int16 CodeVal, UInt16 IOType, String[] Pns)
+        public SlotCard(String CardDesc, String Code, byte NumCh, byte ChannelPins, Int16 CodeVal, byte IOType, String[] Pns)
         {
             CardDescription = CardDesc;
             CodeName = Code;
             NumChannels = NumCh;
-            PinStep = Pstep;
+            PinsPerChannel = ChannelPins;
             HexCode = CodeVal;
             IOChannelType = IOType;
             PartNumbers = Pns;

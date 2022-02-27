@@ -1,11 +1,40 @@
-﻿- Check on the relationship between slot # and corner connector pin groupings (e.g. JS1A, JS2B, etc.)
+﻿- Field connect mapping is intended to provide users with a mapping of field connector pins to information relevant to EtherCAT & Interlock Builder
+- Field connect mapping shall contain:
+	- Field connector details for all field connectors
+		- Connector name
+		- Type of field connector (e.g. DB25F, DB15M, Molex 8 pin, etc.)
+		- All pins for each field connector
+	- Slot card details
+		- Channel type
+		- Slot number
+		- Channel #
+	- EtherCAT details
+		- Module #
+		- Input or Output type
+		- Bit offset
+		- Bit size
+	- Interlock Builder details
+		- I/O ID
+
+- Relevant files/details
+	- List of field connectors (CSV)
+	- Netlist (PADS format)
+	- Fusion system ODS file
+	- Process data variables (from EC Engineer?)
+
+Notes & To Dos
+- Complete list of field connector pins
+- Verify FC mapping against manually built ASM
+- Establish relationship between ECAT module # and slot #
+- Process variable parser
+- Save FC mapping to CSV
+- ODS file parser
+- Check on the relationship between slot # and corner connector pin groupings (e.g. JS1A, JS2B, etc.)
+	- JM confirmed that there is a static relationship between corner connector group and slot #
 - Check for and prevent corner connector group assignments
 - Save and load slot card configuration
-- Missing connectors
-	- J30 - passthrough.
-		- Didn't make it into netlist data table
-	- JMESC1/2/3/4 - passthrough
-		- Didn't make it into netlist data table
-	- P41 - shares signals with JPCB3 (OK)
-	- P42 - shares signals with JPCB3 (OK)
-
+- Fused power connections need to have net aliases assigned
+- ODS file Config sheet fucntion: int format_config_sheet(sys_config_t *sys, xmlNode *sheet)
+- ODS config recommendations:
+	- DI/DO/AI/AO assignements should start from 1, not 0
+	- Assignments should follow order of slots and channels

@@ -29,15 +29,15 @@ namespace FieldConnectMapping
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnOpenFcNetlist = new System.Windows.Forms.Button();
             this.tbProjectName = new System.Windows.Forms.TextBox();
             this.btnDeviceName = new System.Windows.Forms.TextBox();
@@ -61,11 +61,14 @@ namespace FieldConnectMapping
             this.tpNetlist = new System.Windows.Forms.TabPage();
             this.dgvNetlistContents = new System.Windows.Forms.DataGridView();
             this.tpConnectorList = new System.Windows.Forms.TabPage();
+            this.btnExpandConnectorList = new System.Windows.Forms.Button();
+            this.btnOpenConnectorList = new System.Windows.Forms.Button();
+            this.dgvConnectorTable = new System.Windows.Forms.DataGridView();
+            this.tpExpandedConnectorList = new System.Windows.Forms.TabPage();
+            this.dgvExpandedConnectorList = new System.Windows.Forms.DataGridView();
             this.tbFcMapping = new System.Windows.Forms.TabPage();
             this.btnCreateFcMap = new System.Windows.Forms.Button();
             this.dgvFcMap = new System.Windows.Forms.DataGridView();
-            this.btnOpenConnectorList = new System.Windows.Forms.Button();
-            this.dgvConnectorTable = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSlotCardArrangement)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -74,9 +77,11 @@ namespace FieldConnectMapping
             this.tpNetlist.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvNetlistContents)).BeginInit();
             this.tpConnectorList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvConnectorTable)).BeginInit();
+            this.tpExpandedConnectorList.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvExpandedConnectorList)).BeginInit();
             this.tbFcMapping.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFcMap)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvConnectorTable)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOpenFcNetlist
@@ -139,14 +144,14 @@ namespace FieldConnectMapping
             this.dgvSlotCardArrangement.AllowUserToAddRows = false;
             this.dgvSlotCardArrangement.AllowUserToDeleteRows = false;
             this.dgvSlotCardArrangement.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvSlotCardArrangement.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvSlotCardArrangement.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvSlotCardArrangement.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvSlotCardArrangement.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colSlotNum,
@@ -169,8 +174,8 @@ namespace FieldConnectMapping
             // colSlotNum
             // 
             this.colSlotNum.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colSlotNum.DefaultCellStyle = dataGridViewCellStyle11;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colSlotNum.DefaultCellStyle = dataGridViewCellStyle2;
             this.colSlotNum.HeaderText = "Slot #";
             this.colSlotNum.MinimumWidth = 12;
             this.colSlotNum.Name = "colSlotNum";
@@ -202,8 +207,8 @@ namespace FieldConnectMapping
             // colNumChannels
             // 
             this.colNumChannels.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colNumChannels.DefaultCellStyle = dataGridViewCellStyle12;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colNumChannels.DefaultCellStyle = dataGridViewCellStyle3;
             this.colNumChannels.HeaderText = "# Channels";
             this.colNumChannels.MinimumWidth = 12;
             this.colNumChannels.Name = "colNumChannels";
@@ -214,8 +219,8 @@ namespace FieldConnectMapping
             // 
             // colCcStartPin
             // 
-            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colCcStartPin.DefaultCellStyle = dataGridViewCellStyle13;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colCcStartPin.DefaultCellStyle = dataGridViewCellStyle4;
             this.colCcStartPin.HeaderText = "Corner Connector Start Pin";
             this.colCcStartPin.MinimumWidth = 12;
             this.colCcStartPin.Name = "colCcStartPin";
@@ -225,8 +230,8 @@ namespace FieldConnectMapping
             // 
             // colCcEndPin
             // 
-            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colCcEndPin.DefaultCellStyle = dataGridViewCellStyle14;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colCcEndPin.DefaultCellStyle = dataGridViewCellStyle5;
             this.colCcEndPin.HeaderText = "Corner Connector End Pin";
             this.colCcEndPin.MinimumWidth = 12;
             this.colCcEndPin.Name = "colCcEndPin";
@@ -237,8 +242,8 @@ namespace FieldConnectMapping
             // colCodeName
             // 
             this.colCodeName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colCodeName.DefaultCellStyle = dataGridViewCellStyle15;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colCodeName.DefaultCellStyle = dataGridViewCellStyle6;
             this.colCodeName.HeaderText = "Code Name";
             this.colCodeName.MinimumWidth = 12;
             this.colCodeName.Name = "colCodeName";
@@ -250,8 +255,8 @@ namespace FieldConnectMapping
             // colPinStep
             // 
             this.colPinStep.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.ColumnHeader;
-            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            this.colPinStep.DefaultCellStyle = dataGridViewCellStyle16;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.colPinStep.DefaultCellStyle = dataGridViewCellStyle7;
             this.colPinStep.HeaderText = "Pin Step";
             this.colPinStep.MinimumWidth = 12;
             this.colPinStep.Name = "colPinStep";
@@ -264,8 +269,9 @@ namespace FieldConnectMapping
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tpNetlist);
             this.tabControl1.Controls.Add(this.tpConnectorList);
+            this.tabControl1.Controls.Add(this.tpExpandedConnectorList);
+            this.tabControl1.Controls.Add(this.tpNetlist);
             this.tabControl1.Controls.Add(this.tbFcMapping);
             this.tabControl1.Location = new System.Drawing.Point(81, 248);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(10, 3, 10, 3);
@@ -291,7 +297,7 @@ namespace FieldConnectMapping
             // 
             // btnPopulateRandomly
             // 
-            this.btnPopulateRandomly.Location = new System.Drawing.Point(531, 19);
+            this.btnPopulateRandomly.Location = new System.Drawing.Point(78, 21);
             this.btnPopulateRandomly.Name = "btnPopulateRandomly";
             this.btnPopulateRandomly.Size = new System.Drawing.Size(210, 107);
             this.btnPopulateRandomly.TabIndex = 7;
@@ -301,7 +307,7 @@ namespace FieldConnectMapping
             // 
             // btnCreateSlotCardConfig
             // 
-            this.btnCreateSlotCardConfig.Location = new System.Drawing.Point(85, 19);
+            this.btnCreateSlotCardConfig.Location = new System.Drawing.Point(351, 21);
             this.btnCreateSlotCardConfig.Name = "btnCreateSlotCardConfig";
             this.btnCreateSlotCardConfig.Size = new System.Drawing.Size(210, 107);
             this.btnCreateSlotCardConfig.TabIndex = 6;
@@ -324,23 +330,23 @@ namespace FieldConnectMapping
             // dgvSlotCardPins
             // 
             this.dgvSlotCardPins.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvSlotCardPins.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvSlotCardPins.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
             this.dgvSlotCardPins.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvSlotCardPins.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvSlotCardPins.DefaultCellStyle = dataGridViewCellStyle9;
             this.dgvSlotCardPins.Location = new System.Drawing.Point(3, 6);
             this.dgvSlotCardPins.Name = "dgvSlotCardPins";
             this.dgvSlotCardPins.RowHeadersWidth = 102;
@@ -372,6 +378,7 @@ namespace FieldConnectMapping
             // 
             // tpConnectorList
             // 
+            this.tpConnectorList.Controls.Add(this.btnExpandConnectorList);
             this.tpConnectorList.Controls.Add(this.btnOpenConnectorList);
             this.tpConnectorList.Controls.Add(this.dgvConnectorTable);
             this.tpConnectorList.Location = new System.Drawing.Point(10, 58);
@@ -380,6 +387,57 @@ namespace FieldConnectMapping
             this.tpConnectorList.TabIndex = 4;
             this.tpConnectorList.Text = "Connector List";
             this.tpConnectorList.UseVisualStyleBackColor = true;
+            // 
+            // btnExpandConnectorList
+            // 
+            this.btnExpandConnectorList.Location = new System.Drawing.Point(351, 8);
+            this.btnExpandConnectorList.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
+            this.btnExpandConnectorList.Name = "btnExpandConnectorList";
+            this.btnExpandConnectorList.Size = new System.Drawing.Size(230, 120);
+            this.btnExpandConnectorList.TabIndex = 2;
+            this.btnExpandConnectorList.Text = "Expand Connector List";
+            this.btnExpandConnectorList.UseVisualStyleBackColor = true;
+            // 
+            // btnOpenConnectorList
+            // 
+            this.btnOpenConnectorList.Location = new System.Drawing.Point(18, 8);
+            this.btnOpenConnectorList.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
+            this.btnOpenConnectorList.Name = "btnOpenConnectorList";
+            this.btnOpenConnectorList.Size = new System.Drawing.Size(230, 120);
+            this.btnOpenConnectorList.TabIndex = 1;
+            this.btnOpenConnectorList.Text = "Open Connector List";
+            this.btnOpenConnectorList.UseVisualStyleBackColor = true;
+            this.btnOpenConnectorList.Click += new System.EventHandler(this.btnOpenConnectorList_Click);
+            // 
+            // dgvConnectorTable
+            // 
+            this.dgvConnectorTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvConnectorTable.Location = new System.Drawing.Point(18, 139);
+            this.dgvConnectorTable.Name = "dgvConnectorTable";
+            this.dgvConnectorTable.RowHeadersWidth = 102;
+            this.dgvConnectorTable.RowTemplate.Height = 49;
+            this.dgvConnectorTable.Size = new System.Drawing.Size(2099, 818);
+            this.dgvConnectorTable.TabIndex = 0;
+            // 
+            // tpExpandedConnectorList
+            // 
+            this.tpExpandedConnectorList.Controls.Add(this.dgvExpandedConnectorList);
+            this.tpExpandedConnectorList.Location = new System.Drawing.Point(10, 58);
+            this.tpExpandedConnectorList.Name = "tpExpandedConnectorList";
+            this.tpExpandedConnectorList.Size = new System.Drawing.Size(2147, 980);
+            this.tpExpandedConnectorList.TabIndex = 5;
+            this.tpExpandedConnectorList.Text = "Expanded Connector List";
+            this.tpExpandedConnectorList.UseVisualStyleBackColor = true;
+            // 
+            // dgvExpandedConnectorList
+            // 
+            this.dgvExpandedConnectorList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvExpandedConnectorList.Location = new System.Drawing.Point(18, 29);
+            this.dgvExpandedConnectorList.Name = "dgvExpandedConnectorList";
+            this.dgvExpandedConnectorList.RowHeadersWidth = 102;
+            this.dgvExpandedConnectorList.RowTemplate.Height = 49;
+            this.dgvExpandedConnectorList.Size = new System.Drawing.Size(2083, 921);
+            this.dgvExpandedConnectorList.TabIndex = 0;
             // 
             // tbFcMapping
             // 
@@ -413,27 +471,6 @@ namespace FieldConnectMapping
             this.dgvFcMap.Size = new System.Drawing.Size(2112, 841);
             this.dgvFcMap.TabIndex = 1;
             // 
-            // btnOpenConnectorList
-            // 
-            this.btnOpenConnectorList.Location = new System.Drawing.Point(18, 8);
-            this.btnOpenConnectorList.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
-            this.btnOpenConnectorList.Name = "btnOpenConnectorList";
-            this.btnOpenConnectorList.Size = new System.Drawing.Size(230, 120);
-            this.btnOpenConnectorList.TabIndex = 1;
-            this.btnOpenConnectorList.Text = "Open Connector List";
-            this.btnOpenConnectorList.UseVisualStyleBackColor = true;
-            this.btnOpenConnectorList.Click += new System.EventHandler(this.btnOpenConnectorList_Click);
-            // 
-            // dgvConnectorTable
-            // 
-            this.dgvConnectorTable.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvConnectorTable.Location = new System.Drawing.Point(18, 139);
-            this.dgvConnectorTable.Name = "dgvConnectorTable";
-            this.dgvConnectorTable.RowHeadersWidth = 102;
-            this.dgvConnectorTable.RowTemplate.Height = 49;
-            this.dgvConnectorTable.Size = new System.Drawing.Size(2099, 818);
-            this.dgvConnectorTable.TabIndex = 0;
-            // 
             // FieldConnectMappingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(17F, 41F);
@@ -456,9 +493,11 @@ namespace FieldConnectMapping
             this.tpNetlist.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvNetlistContents)).EndInit();
             this.tpConnectorList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvConnectorTable)).EndInit();
+            this.tpExpandedConnectorList.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvExpandedConnectorList)).EndInit();
             this.tbFcMapping.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvFcMap)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvConnectorTable)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -494,6 +533,9 @@ namespace FieldConnectMapping
         private System.Windows.Forms.TabPage tpConnectorList;
         private System.Windows.Forms.Button btnOpenConnectorList;
         private System.Windows.Forms.DataGridView dgvConnectorTable;
+        private System.Windows.Forms.Button btnExpandConnectorList;
+        private System.Windows.Forms.TabPage tpExpandedConnectorList;
+        private System.Windows.Forms.DataGridView dgvExpandedConnectorList;
     }
 }
 

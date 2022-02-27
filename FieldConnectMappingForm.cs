@@ -16,14 +16,15 @@ namespace FieldConnectMapping
 {
     public partial class FieldConnectMappingForm : Form
     {
-        private const string Version = "0.2";
+        private const string Version = "0.3";
         private const string SignalHeader = "*SIGNAL*";
+        private const string NetlistEnd = "*END*";
         private const byte CornerConnectorGroupSize = 18;
 
         private const byte NumSlots = 24; //temporary, for testing Fusion
         private const byte MaxRowsToRandomize = 24; //temporary, for testing form
 
-        private string[] CornerConnectorPrefixes = { "JS1", "JS2", "JS3", "JS4" };
+        private string[] CornerConnectorNames = { "JS1", "JS2", "JS3", "JS4" };
 
         //For representing field connect info as a table
         //These data tables will store the slot card arrangement and netlist and merge them
@@ -33,8 +34,8 @@ namespace FieldConnectMapping
         DataTable dtFieldConnectors;
 
         //Dictionaries for Field Connect Signals and Slot Card Connections
-        private Dictionary<string, SlotCardConnection> dictSlotCardConnection;
-        private Dictionary<string, FieldConnectSignal> dictFieldConnectSignal;
+        private Dictionary<string, SlotCardConnection> dictSlotCardConnections;
+        private Dictionary<string, FieldConnectSignal> dictFieldConnectSignals;
         private Dictionary<string, FieldConnectorInfo> dictFieldConnectors;
 
 
@@ -59,6 +60,7 @@ namespace FieldConnectMapping
             public string ConnectorName;
             public string ConnectorDescription;
             public string ConnectorType;
+            public string ConnectorPins;
         };
 
 
@@ -117,37 +119,48 @@ namespace FieldConnectMapping
 
 
                 //Read the contents of the file into a stream
-                GetFieldConnectDesignations(NetlistFilePath);
+                GetFieldConnectorAssignments(NetlistFilePath);
 
                 //Update Netlist DataGridView with parsed netlist
                 // .DataSource = dtSlotCardPins;
+
+                dtNetList.DefaultView.Sort = "Field Connector Name, Field Connector Pin";
                 dgvNetlistContents.DataSource = dtNetList;
+                //dtNetList.Columns.Add("Signal Name", typeof(string));
+                //dtNetList.Columns.Add("Field Connector Assignment", typeof(string));
+                //dtNetList.Columns.Add("Field Connector Name", typeof(string));
+                //dtNetList.Columns.Add("Field Connector Pin", typeof(string));
+                //dtNetList.Columns.Add("Corner Connector Designation", typeof(string));
+
             }
 
         }
 
-        private Boolean GetFieldConnectDesignations(string NetlistFile)
+        private Boolean GetFieldConnectorAssignments(string NetlistFile)
         {
             StreamReader reader;
             string line = string.Empty;
             string SignalName = string.Empty;
             string[] splitsignalline = new string[2];
-            string ConnectorAssignments = string.Empty;
+            string ConnectionAssignments = string.Empty;
             string SignalCornerConnectorDesignation = string.Empty;
             string SignalFcConnectorDesignations = string.Empty;
+            int NumCornerConnectorAssignments = 0;
 
-            Boolean InSignalSection = false;
+            bool InSignalSection = false;
+            bool UsesFieldConnector = false; 
 
             int i;      //for testing
 
-            FieldConnectSignal myFieldConnectSignal = new FieldConnectSignal();
-            dictFieldConnectSignal = new Dictionary<string, FieldConnectSignal>();
+            dictFieldConnectSignals = new Dictionary<string, FieldConnectSignal>();
 
 
 
             dtNetList = new DataTable("FieldConnectNetlist");
             dtNetList.Columns.Add("Signal Name", typeof(string));
-            dtNetList.Columns.Add("Field Connector Designations", typeof(string));
+            dtNetList.Columns.Add("Field Connector Assignment", typeof(string));
+            dtNetList.Columns.Add("Field Connector Name", typeof(string));
+            dtNetList.Columns.Add("Field Connector Pin", typeof(int));
             dtNetList.Columns.Add("Corner Connector Designation", typeof(string));
 
 
@@ -170,7 +183,7 @@ namespace FieldConnectMapping
                 if (line.Contains(SignalHeader))
                 {
                     InSignalSection = true;
-                    ConnectorAssignments = string.Empty;
+                    ConnectionAssignments = string.Empty;
 
                     //Parse signal name from line and add to Netlist data table
                     splitsignalline = line.Split("* ");
@@ -178,83 +191,192 @@ namespace FieldConnectMapping
 
 
                     //Process lines from netlist file until next signal header is found
+                    //This will build a list of connection assignments related to the signal
                     do
                     {
                         line = reader.ReadLine();
                         if (line == null)
                             break;
-                        if (!line.Contains(SignalHeader))
+                        if (!line.Contains(SignalHeader)&&!line.Contains(NetlistEnd))
                         {
-                            if(ConnectorAssignments == string.Empty)
-                                ConnectorAssignments += line;
+
+                            if(ConnectionAssignments == string.Empty)
+                                ConnectionAssignments += line;
                             else
-                                ConnectorAssignments += " " + line;
+                                ConnectionAssignments += " " + line;
                         }
                     }
                     while (!(line.Contains(SignalHeader)));
 
 
-
-                    //Signals which are connected to field connector pins will be added to netlist data table 
+                    //Netlist will be represented using field connectors as the point of reference
                     //Field connectors may or may not have a connection to a corner connector
-                    //If corner connector information is available, this will be included in netlist datatable
+                    //Possible types of connections to field connectors:
+                    //1) Straight connection between field connector pin(s) and slot card channel
+                    //  - One or more field connectors and pins may be connected to a single slot card channel (i.e. they share an I/O point)
+                    //  - One corner connector pin is used (b/c only a single channel is used)
+                    //  - List each FC assignment and for each show FC name & pin#, signal name, corner connector name & pin#                          - 
+                    //2) "Pass through" signals which do not use slot card channels
+                    //  - Signal is connected to pin(s) on one or more FCs but is not connected to a corner connector pin
+                    //  - Show FC name & pin# and signal name
+                    //  - Repeat this for all field connector designations related to this signal
+                    //3) Power related connections (e.g. 24V & COM)
+                    //  - Connection assigments could include:
+                    //      - Corner connector pins
+                    //      - Field connector pins
+                    //      - Components on FC board (e.g. relays, fuses, resistors, etc.)
+                    //      - Signal is connected more than one corner connector pins and has one or more other connection assignements
+                    //  - Show FC name & pin# & signal name. Do not include corner connector name & pin#.
+                    //4) FC pin is not connected to anything
+                    //  - Netlist file will have no reference to an unconnected pin
 
 
+                    //Reset flags and counters used by parser
+                    NumCornerConnectorAssignments = 0;
+                    UsesFieldConnector = false;
 
-                    //Check if 
-                    //Parse corner connector designation & pin# from all connector designations for this signal
-                    string[] splitConnectorAssignments = ConnectorAssignments.Split(' ');
-                    foreach(string ConnectorDesignation in splitConnectorAssignments)
+
+                    //                foreach (String FieldConnectorName in dictFieldConnectors.Keys)
+                    //                {
+                    //                    if (FcConnectorDesignation.Contains(FieldConnectorName))
+
+                    //Check if this signal includes a field connector assignment
+                    foreach (String FieldConnectorName in dictFieldConnectors.Keys)
                     {
-                        //check current connector designation against possible choices of corner connector names
-                        foreach (string CornerConnector in CornerConnectorPrefixes)
+                        if (ConnectionAssignments.Contains(FieldConnectorName))
+                        {
+                            UsesFieldConnector = true;
+                            break;
+                        }
+                    }
+
+                    //If the signal does not use a field connector, skip this signal b/c it's not relevant to the field connect mapping
+                    if (!UsesFieldConnector)
+                        continue;
+
+
+                    //Check if this signal includes a corner connector assignement
+
+                    //Split all connection assignments into separate strings for processing
+                    string[] splitConnectionAssignments = ConnectionAssignments.Split(' ');
+
+                    //Then, compare each connection assigment against list of corner connectors to see if any corner connectors are in this signal's connection assignments
+                    foreach (string ConnectorDesignation in splitConnectionAssignments)
+                    {
+                        foreach (string CornerConnector in CornerConnectorNames)
                         {
                             //If there is a corner connector name found
-                            //Add contents of this signal to Netlist datatable
+                            //Include corner connector designation (group name + pin#) in netlist data table
                             if (ConnectorDesignation.Contains(CornerConnector))
                             {
-                                //                                dtNetList.Rows.Add(SignalName, SignalCornerConnectorDesignation);
-                                //                                dtNetList.Rows.Add(SignalName, ConnectorDesignation);
-                                
-                                //Store the corner connector designation for later use
-                                SignalCornerConnectorDesignation = ConnectorDesignation;
-
-                                //Get string with all connector designations except for the corner connector
-                                //Remove corner connector designation from the full list of connector designations 
-                                SignalFcConnectorDesignations = ConnectorAssignments.Replace(SignalCornerConnectorDesignation + " ", "");
-
-                                //Split string of all FC Connectors into individual FC connectors
-                                string[] splitFcConnectorDesignations = SignalFcConnectorDesignations.Split(' ');
-
-                                //Add each FC Connector assignment to netlist data table and netlist dictionary
-                                foreach(string FcConnectorDesignation in splitFcConnectorDesignations)
-                                {
-                                    if (SignalName.Equals("BUSY_1"))
-                                        i = 0;
-
-                                    //Add this FC connector assignment to the netlist data table
-                                    dtNetList.Rows.Add(SignalName, FcConnectorDesignation, SignalCornerConnectorDesignation);
-                                    
-                                    //Populate a Field Connect Signal structure and add to Field Connect Signal dictionary
-                                    myFieldConnectSignal.ConnectorDesignation = FcConnectorDesignation;
-                                    myFieldConnectSignal.SignalName = SignalName;
-                                    myFieldConnectSignal.CornerConnectorDesignation = SignalCornerConnectorDesignation;
-
-//                                    dictFieldConnectSignal.Add(FcConnectorDesignation, myFieldConnectSignal);
-                                }
+                                NumCornerConnectorAssignments++;
                             }
                         }
                     }
 
+                    switch (NumCornerConnectorAssignments)
+                    {
+                        case 0:         //Signal doesn't use any corner connector pins
+                            //Process signal as one which doesn't connect to a slot card
+                            ProcessNonSlotCardSignal(SignalName, ConnectionAssignments, ref dtNetList);
+                            break;
+                        case 1:         //Signal uses only one corner connector pin
+                            //Process signal as one which connects to a slot card
+                            ProcessSlotCardSignal(SignalName, ConnectionAssignments, ref dtNetList);
+                            break;
+                        default:        //Signal uses multiple corner connector pins
+                            //Process signal as one which doesn't connect to a slot card channel
+                            //This is done because the signal is not a unique connection between a slot card channel and field connector
+                            ProcessNonSlotCardSignal(SignalName, ConnectionAssignments, ref dtNetList);
+                            break;
+                    }
 
                     i = 0;
                 }
 
             } while (line != null);
 
+            reader.Close();
+
             return true;
         }
 
+        private void ProcessNonSlotCardSignal(string SignalName, string SignalConnections, ref DataTable inDataTable)
+        {
+
+            string[] splitSignalConnections = SignalConnections.Split(' ');
+            foreach (string Connection in splitSignalConnections)
+            {
+                foreach (String FieldConnectorName in dictFieldConnectors.Keys)
+                {
+                    if (Connection.Contains(FieldConnectorName))
+                    {
+                        //Get the pin number for this field connector assignement
+                        string[] splitConnection = Connection.Split('.');
+
+                        //Add this FC connector assignment to the netlist data table
+                        dtNetList.Rows.Add(SignalName, Connection, splitConnection[0], Convert.ToInt32(splitConnection[1]), "");
+                    }
+                }
+            }
+
+
+        }
+
+
+        //Process a signal which has a connection to a slot card (via a corner connector pin in the signal's connection assignments)
+        //One or more field connector pins may be connected to this signal
+        private void ProcessSlotCardSignal(string SignalName, string SignalConnections, ref DataTable inDataTable)
+        {
+            string[] splitSignalConnections = SignalConnections.Split(' ');
+            string NonCcAssignments = string.Empty;
+            string CcAssignment = string.Empty;
+            bool CcFound = false;
+
+
+            //Check all signal connections for corner connector assignment
+            foreach (string SignalConnection in splitSignalConnections)
+            {
+                //check current signal connection to see if it includes a corner connector name
+                foreach (string CornerConnectorName in CornerConnectorNames)
+                {
+                    //If there is a corner connector name found
+                    if (SignalConnection.Contains(CornerConnectorName))
+                    {
+                        CcAssignment = SignalConnection;
+                        CcFound = true;
+                        break;
+                    }
+                }
+
+                //Finish iterating through signal connections if corner connector was found
+                if (CcFound)
+                    break;
+            }
+
+            //Remove corner connector designation from the full list of connector designations 
+            NonCcAssignments = SignalConnections.Replace(CcAssignment + " ", "");
+
+            //Find which signal connections are to field connectors and add those to data table along with corner connector assigment info
+
+            string[] splitNonCcAssignments = NonCcAssignments.Split(' ');
+            foreach (string Connection in splitNonCcAssignments)
+            {
+                foreach (String FieldConnectorName in dictFieldConnectors.Keys)
+                {
+                    if (Connection.Contains(FieldConnectorName))
+                    {
+                        //Get the pin number for this field connector assignement
+                        string[] splitConnection = Connection.Split('.');
+
+                        //Add this FC connector assignment to the netlist data table
+                        dtNetList.Rows.Add(SignalName, Connection, splitConnection[0], Convert.ToInt32(splitConnection[1]), CcAssignment);
+                    }
+                }
+            }
+        }
+
+ 
         private void dgvSlotCardArrangement_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             Int32 i;
@@ -307,6 +429,7 @@ namespace FieldConnectMapping
 
         }
 
+
         private void btnCreateSlotCardConfig_Click(object sender, EventArgs e)
         {
             string sCardDescription = string.Empty;
@@ -332,7 +455,7 @@ namespace FieldConnectMapping
 
 
             SlotCardConnection mySlotCardConnection = new SlotCardConnection();
-            dictSlotCardConnection = new Dictionary<string, SlotCardConnection>(); 
+            dictSlotCardConnections = new Dictionary<string, SlotCardConnection>(); 
 
             foreach (DataGridViewRow row in dgvSlotCardArrangement.Rows)
             {
@@ -404,7 +527,7 @@ namespace FieldConnectMapping
                     mySlotCardConnection.SlotCardPinNumber = (byte)SlotPin;
                     mySlotCardConnection.SlotNumber = (byte)SlotNum;
 
-                    dictSlotCardConnection.Add(sCcPinDesignation, mySlotCardConnection);
+                    dictSlotCardConnections.Add(sCcPinDesignation, mySlotCardConnection);
                 }
 
             }
@@ -451,7 +574,8 @@ namespace FieldConnectMapping
         {
             int i;
             string SignalName = string.Empty;
-            string FieldConnectorDesignation = string.Empty;
+            string FieldConnectorName = string.Empty;
+            int FieldConnectorPin = 0;
             string CardDescription = string.Empty;
             string CornerConnectorDesignation = string.Empty;
             byte SlotNumber = 0;
@@ -465,16 +589,20 @@ namespace FieldConnectMapping
             //Create new mapping which contains field connector and slot card mapping details
             dtFieldConnectMapping = new DataTable("FieldConnectMapping");
             dtFieldConnectMapping.Columns.Add("Signal Name", typeof(string));
-            dtFieldConnectMapping.Columns.Add("Field Connector Designation", typeof(string));
+            dtFieldConnectMapping.Columns.Add("Field Connector Name", typeof(string));
+            dtFieldConnectMapping.Columns.Add("Field Connector Pin", typeof(int));
             dtFieldConnectMapping.Columns.Add("Card Description", typeof(string));
             dtFieldConnectMapping.Columns.Add("Slot Number", typeof(byte));
-            dtFieldConnectMapping.Columns.Add("Slot Card Pin #", typeof(byte));
+            dtFieldConnectMapping.Columns.Add("Slot Card Pin #", typeof(int));
             dtFieldConnectMapping.Columns.Add("Corner Connector Designation", typeof(string));
 
 
             //Netlist structure
+            //dtNetList = new DataTable("FieldConnectNetlist");
             //dtNetList.Columns.Add("Signal Name", typeof(string));
-            //dtNetList.Columns.Add("Field Connector Designations", typeof(string));
+            //dtNetList.Columns.Add("Field Connector Assignment", typeof(string));
+            //dtNetList.Columns.Add("Field Connector Name", typeof(string));
+            //dtNetList.Columns.Add("Field Connector Pin", typeof(int));
             //dtNetList.Columns.Add("Corner Connector Designation", typeof(string));
 
             //private struct SlotCardConnection
@@ -488,35 +616,39 @@ namespace FieldConnectMapping
 
             foreach (DataRow row in dtNetList.Rows)
             {
-                //Check if this row in the netlist data table contains information about a field connector name
-                //This is done by checking to see if a known field connector name appears in the field connector designation from the netlist
-                IsFieldConnector = false;
+                //Unnecessary b/c original netlist is already filtered by field connector name
+                ////Check if this row in the netlist data table contains information about a field connector name
+                ////This is done by checking to see if a known field connector name appears in the field connector designation from the netlist
+                //IsFieldConnector = false;
 
-                FieldConnectorDesignation = row.ItemArray[1].ToString();
-                foreach(String FieldConnectorName in dictFieldConnectors.Keys)
-                {
-                    if (FieldConnectorDesignation.Contains(FieldConnectorName))
-                        IsFieldConnector = true;
-                }
+                //FieldConnectorName = row.ItemArray[1].ToString();
+                //foreach(String FCName in dictFieldConnectors.Keys)
+                //{
+                //    if (FieldConnectorName.Contains(FCName))
+                //        IsFieldConnector = true;
+                //}
 
-                //If this row does not include field connector information, continue to the next netlist data table row
-                if (!IsFieldConnector)
-                    continue;
+                ////If this row does not include field connector information, continue to the next netlist data table row
+                //if (!IsFieldConnector)
+                //    continue;
 
-                CornerConnectorDesignation = row.ItemArray[2].ToString();
+                CornerConnectorDesignation = row.ItemArray[4].ToString();
 
 
                 //Test
                 SignalName = row.ItemArray[0].ToString();
-                FieldConnectorDesignation = row.ItemArray[1].ToString();
-                if (dictSlotCardConnection.TryGetValue(CornerConnectorDesignation, out currSlotCardConnection))
+                FieldConnectorName = row.ItemArray[2].ToString();
+                if (dictSlotCardConnections.TryGetValue(CornerConnectorDesignation, out currSlotCardConnection))
                 {
                     CardDescription = currSlotCardConnection.CardDescription;
                     SlotNumber = currSlotCardConnection.SlotNumber;
                     SlotCardPin = currSlotCardConnection.SlotCardPinNumber;
                 }
 
-                dtFieldConnectMapping.Rows.Add(SignalName, FieldConnectorDesignation, CardDescription, SlotNumber, SlotCardPin, CornerConnectorDesignation);
+                FieldConnectorName = row.ItemArray[2].ToString();
+                FieldConnectorPin = Convert.ToInt32(row.ItemArray[3]);
+
+                dtFieldConnectMapping.Rows.Add(SignalName, FieldConnectorName, FieldConnectorPin, CardDescription, SlotNumber, SlotCardPin, CornerConnectorDesignation);
 
 
                 //If the Corner Connector Designation is found in the slot card mapping (data table)
@@ -538,6 +670,7 @@ namespace FieldConnectMapping
                 //    i= 0;
             }
 
+            dtFieldConnectMapping.DefaultView.Sort = "Field Connector Name, Field Connector Pin";
             dgvFcMap.DataSource = dtFieldConnectMapping;
         }
 
@@ -579,11 +712,13 @@ namespace FieldConnectMapping
                     //    public string ConnectorName;
                     //    public string ConnectorDescription;
                     //    public string ConnectorType;
-                    //};
+                    //    public string ConnectorPins;
+        //};
 
                     currFieldConnectorInfo.ConnectorName = row.ItemArray[0].ToString();
                     currFieldConnectorInfo.ConnectorDescription = row.ItemArray[1].ToString();
                     currFieldConnectorInfo.ConnectorType = row.ItemArray[2].ToString();
+                    currFieldConnectorInfo.ConnectorPins = row.ItemArray[3].ToString();
 
                     dictFieldConnectors.Add(currFieldConnectorInfo.ConnectorName, currFieldConnectorInfo);
                 }

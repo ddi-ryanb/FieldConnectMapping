@@ -58,14 +58,14 @@ namespace FieldConnectMapping
             this.btnCreateSlotCardConfig = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dgvSlotCardPins = new System.Windows.Forms.DataGridView();
-            this.tpNetlist = new System.Windows.Forms.TabPage();
-            this.dgvNetlistContents = new System.Windows.Forms.DataGridView();
             this.tpConnectorList = new System.Windows.Forms.TabPage();
             this.btnExpandConnectorList = new System.Windows.Forms.Button();
             this.btnOpenConnectorList = new System.Windows.Forms.Button();
             this.dgvConnectorTable = new System.Windows.Forms.DataGridView();
             this.tpExpandedConnectorList = new System.Windows.Forms.TabPage();
             this.dgvExpandedConnectorList = new System.Windows.Forms.DataGridView();
+            this.tpNetlist = new System.Windows.Forms.TabPage();
+            this.dgvNetlistContents = new System.Windows.Forms.DataGridView();
             this.tbFcMapping = new System.Windows.Forms.TabPage();
             this.btnCreateFcMap = new System.Windows.Forms.Button();
             this.dgvFcMap = new System.Windows.Forms.DataGridView();
@@ -74,12 +74,12 @@ namespace FieldConnectMapping
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSlotCardPins)).BeginInit();
-            this.tpNetlist.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvNetlistContents)).BeginInit();
             this.tpConnectorList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvConnectorTable)).BeginInit();
             this.tpExpandedConnectorList.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvExpandedConnectorList)).BeginInit();
+            this.tpNetlist.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNetlistContents)).BeginInit();
             this.tbFcMapping.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvFcMap)).BeginInit();
             this.SuspendLayout();
@@ -354,28 +354,6 @@ namespace FieldConnectMapping
             this.dgvSlotCardPins.Size = new System.Drawing.Size(2101, 821);
             this.dgvSlotCardPins.TabIndex = 0;
             // 
-            // tpNetlist
-            // 
-            this.tpNetlist.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tpNetlist.Controls.Add(this.dgvNetlistContents);
-            this.tpNetlist.Controls.Add(this.btnOpenFcNetlist);
-            this.tpNetlist.Location = new System.Drawing.Point(10, 58);
-            this.tpNetlist.Name = "tpNetlist";
-            this.tpNetlist.Size = new System.Drawing.Size(2147, 980);
-            this.tpNetlist.TabIndex = 2;
-            this.tpNetlist.Text = "Netlist Signals";
-            this.tpNetlist.UseVisualStyleBackColor = true;
-            // 
-            // dgvNetlistContents
-            // 
-            this.dgvNetlistContents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvNetlistContents.Location = new System.Drawing.Point(25, 144);
-            this.dgvNetlistContents.Name = "dgvNetlistContents";
-            this.dgvNetlistContents.RowHeadersWidth = 102;
-            this.dgvNetlistContents.RowTemplate.Height = 49;
-            this.dgvNetlistContents.Size = new System.Drawing.Size(2013, 805);
-            this.dgvNetlistContents.TabIndex = 0;
-            // 
             // tpConnectorList
             // 
             this.tpConnectorList.Controls.Add(this.btnExpandConnectorList);
@@ -397,6 +375,7 @@ namespace FieldConnectMapping
             this.btnExpandConnectorList.TabIndex = 2;
             this.btnExpandConnectorList.Text = "Expand Connector List";
             this.btnExpandConnectorList.UseVisualStyleBackColor = true;
+            this.btnExpandConnectorList.Click += new System.EventHandler(this.btnExpandConnectorList_Click);
             // 
             // btnOpenConnectorList
             // 
@@ -438,6 +417,28 @@ namespace FieldConnectMapping
             this.dgvExpandedConnectorList.RowTemplate.Height = 49;
             this.dgvExpandedConnectorList.Size = new System.Drawing.Size(2083, 921);
             this.dgvExpandedConnectorList.TabIndex = 0;
+            // 
+            // tpNetlist
+            // 
+            this.tpNetlist.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tpNetlist.Controls.Add(this.dgvNetlistContents);
+            this.tpNetlist.Controls.Add(this.btnOpenFcNetlist);
+            this.tpNetlist.Location = new System.Drawing.Point(10, 58);
+            this.tpNetlist.Name = "tpNetlist";
+            this.tpNetlist.Size = new System.Drawing.Size(2147, 980);
+            this.tpNetlist.TabIndex = 2;
+            this.tpNetlist.Text = "Netlist Signals";
+            this.tpNetlist.UseVisualStyleBackColor = true;
+            // 
+            // dgvNetlistContents
+            // 
+            this.dgvNetlistContents.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvNetlistContents.Location = new System.Drawing.Point(25, 144);
+            this.dgvNetlistContents.Name = "dgvNetlistContents";
+            this.dgvNetlistContents.RowHeadersWidth = 102;
+            this.dgvNetlistContents.RowTemplate.Height = 49;
+            this.dgvNetlistContents.Size = new System.Drawing.Size(2013, 805);
+            this.dgvNetlistContents.TabIndex = 0;
             // 
             // tbFcMapping
             // 
@@ -490,12 +491,12 @@ namespace FieldConnectMapping
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSlotCardPins)).EndInit();
-            this.tpNetlist.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvNetlistContents)).EndInit();
             this.tpConnectorList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvConnectorTable)).EndInit();
             this.tpExpandedConnectorList.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvExpandedConnectorList)).EndInit();
+            this.tpNetlist.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvNetlistContents)).EndInit();
             this.tbFcMapping.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvFcMap)).EndInit();
             this.ResumeLayout(false);

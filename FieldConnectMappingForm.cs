@@ -16,7 +16,7 @@ namespace FieldConnectMapping
 {
     public partial class FieldConnectMappingForm : Form
     {
-        private const string Version = "0.3";
+        private const string Version = "0.4";
         private const string SignalHeader = "*SIGNAL*";
         private const string NetlistEnd = "*END*";
         private const byte CornerConnectorGroupSize = 18;
@@ -60,7 +60,7 @@ namespace FieldConnectMapping
             public string ConnectorName;
             public string ConnectorDescription;
             public string ConnectorType;
-            public string ConnectorPins;
+            public int ConnectorPins;
         };
 
 
@@ -303,6 +303,7 @@ namespace FieldConnectMapping
 
         private void ProcessNonSlotCardSignal(string SignalName, string SignalConnections, ref DataTable inDataTable)
         {
+
 
             string[] splitSignalConnections = SignalConnections.Split(' ');
             foreach (string Connection in splitSignalConnections)
@@ -578,12 +579,15 @@ namespace FieldConnectMapping
             int FieldConnectorPin = 0;
             string CardDescription = string.Empty;
             string CornerConnectorDesignation = string.Empty;
-            byte SlotNumber = 0;
-            byte SlotCardPin = 0;
+            int SlotNumber = 0;
+            int SlotCardPin = 0;
+            int Pin = 0;
+            int NumPins = 0;
 
             bool IsFieldConnector = false;
 
             SlotCardConnection currSlotCardConnection = new SlotCardConnection();
+            FieldConnectorInfo currFieldConnectorInfo = new FieldConnectorInfo();
 
 
             //Create new mapping which contains field connector and slot card mapping details
@@ -595,6 +599,8 @@ namespace FieldConnectMapping
             dtFieldConnectMapping.Columns.Add("Slot Number", typeof(byte));
             dtFieldConnectMapping.Columns.Add("Slot Card Pin #", typeof(int));
             dtFieldConnectMapping.Columns.Add("Corner Connector Designation", typeof(string));
+            dtFieldConnectMapping.PrimaryKey = new DataColumn[] { dtFieldConnectMapping.Columns["Field Connector Name"], 
+                                                                dtFieldConnectMapping.Columns["Field Connector Pin"]};
 
 
             //Netlist structure
@@ -616,62 +622,66 @@ namespace FieldConnectMapping
 
             foreach (DataRow row in dtNetList.Rows)
             {
-                //Unnecessary b/c original netlist is already filtered by field connector name
-                ////Check if this row in the netlist data table contains information about a field connector name
-                ////This is done by checking to see if a known field connector name appears in the field connector designation from the netlist
-                //IsFieldConnector = false;
-
-                //FieldConnectorName = row.ItemArray[1].ToString();
-                //foreach(String FCName in dictFieldConnectors.Keys)
-                //{
-                //    if (FieldConnectorName.Contains(FCName))
-                //        IsFieldConnector = true;
-                //}
-
-                ////If this row does not include field connector information, continue to the next netlist data table row
-                //if (!IsFieldConnector)
-                //    continue;
-
                 CornerConnectorDesignation = row.ItemArray[4].ToString();
-
 
                 //Test
                 SignalName = row.ItemArray[0].ToString();
                 FieldConnectorName = row.ItemArray[2].ToString();
+                FieldConnectorPin = Convert.ToInt32(row.ItemArray[3]);
+
+
                 if (dictSlotCardConnections.TryGetValue(CornerConnectorDesignation, out currSlotCardConnection))
                 {
                     CardDescription = currSlotCardConnection.CardDescription;
                     SlotNumber = currSlotCardConnection.SlotNumber;
                     SlotCardPin = currSlotCardConnection.SlotCardPinNumber;
+                    dtFieldConnectMapping.Rows.Add(SignalName, FieldConnectorName, FieldConnectorPin, CardDescription, SlotNumber, SlotCardPin, CornerConnectorDesignation);
+                }
+                else
+                {
+                    dtFieldConnectMapping.Rows.Add(SignalName, FieldConnectorName, FieldConnectorPin, "n/a", null, null, "");
                 }
 
-                FieldConnectorName = row.ItemArray[2].ToString();
-                FieldConnectorPin = Convert.ToInt32(row.ItemArray[3]);
-
-                dtFieldConnectMapping.Rows.Add(SignalName, FieldConnectorName, FieldConnectorPin, CardDescription, SlotNumber, SlotCardPin, CornerConnectorDesignation);
-
-
-                //If the Corner Connector Designation is found in the slot card mapping (data table)
-                //Then a matching slot card mapping has been found
-                //Combine information from this slot card mapping with the field connect mapping in a new map (data table)
-                //if (dictSlotCardConnection.TryGetValue(CornerConnectorDesignation, out currSlotCardConnection))
-                //{
-                //    SignalName = row.ItemArray[0].ToString();
-                //    FieldConnectorDesignation = row.ItemArray[1].ToString();
-                //    CardDescription = currSlotCardConnection.CardDescription;
-                //    SlotNumber = currSlotCardConnection.SlotNumber;
-                //    SlotCardPin = currSlotCardConnection.SlotCardPinNumber;
-
-                //    dtFieldConnectMapping.Rows.Add(SignalName, FieldConnectorDesignation, CardDescription, SlotNumber, SlotCardPin, CornerConnectorDesignation);
-                //    i = 1;
-                //}
-
-                //else;
-                //    i= 0;
             }
+
+
+            //Populate field connector pins that are not already assigned, as unconnected
+
+            //Iterate through each field connector
+            //Check to see if each pin on each connector is present in the field connect map
+            //Add any pins that are missing to the field connect map and label as "not connected"
+
+            //Instantiate object array to be used to check presence of connector/pin in field connect map
+            //Conenctor/pin designation in field connect map is used as the primary key
+            object[] ConnectorPinDesignation = new object[2];
+
+            
+
+            foreach (string ConnectorName in dictFieldConnectors.Keys)
+            {
+                dictFieldConnectors.TryGetValue(ConnectorName, out currFieldConnectorInfo);
+
+                ConnectorPinDesignation[0] = ConnectorName;
+                NumPins = currFieldConnectorInfo.ConnectorPins;
+
+                //Iterate through all pins on this connector
+                for (Pin = 1;Pin<NumPins+1;Pin++)
+                {
+                    ConnectorPinDesignation[1] = Pin;
+
+                    //If connector/pin designation is not found in the field connect map, add it to the map as "not connected"
+                    if (!dtFieldConnectMapping.Rows.Contains(ConnectorPinDesignation))
+                    {
+                        dtFieldConnectMapping.Rows.Add("not connected", ConnectorName, Pin, "n/a", null, null, "");
+                    }
+                }
+            }
+
+
 
             dtFieldConnectMapping.DefaultView.Sort = "Field Connector Name, Field Connector Pin";
             dgvFcMap.DataSource = dtFieldConnectMapping;
+
         }
 
         private void btnOpenConnectorList_Click(object sender, EventArgs e)
@@ -718,7 +728,7 @@ namespace FieldConnectMapping
                     currFieldConnectorInfo.ConnectorName = row.ItemArray[0].ToString();
                     currFieldConnectorInfo.ConnectorDescription = row.ItemArray[1].ToString();
                     currFieldConnectorInfo.ConnectorType = row.ItemArray[2].ToString();
-                    currFieldConnectorInfo.ConnectorPins = row.ItemArray[3].ToString();
+                    currFieldConnectorInfo.ConnectorPins = Convert.ToInt32(row.ItemArray[3]);
 
                     dictFieldConnectors.Add(currFieldConnectorInfo.ConnectorName, currFieldConnectorInfo);
                 }
@@ -757,5 +767,8 @@ namespace FieldConnectMapping
             return dtTable;
         }
 
+        private void btnExpandConnectorList_Click(object sender, EventArgs e)
+        {
+        }
     }
 }

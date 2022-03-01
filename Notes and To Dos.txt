@@ -24,6 +24,9 @@
 
 Notes & To Dos
 - Complete list of field connector pins
+- Review
+	- JHTR PDU
+	- P25
 - Verify FC mapping against manually built ASM
 - Establish relationship between ECAT module # and slot #
 - Process variable parser
